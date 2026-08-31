@@ -1,4 +1,5 @@
 from langchain.agents import create_agent
+from langchain.messages import AIMessage, HumanMessage
 from langchain.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain.chat_models import init_chat_model
@@ -186,14 +187,36 @@ def agent_3():
     print(results["messages"][-1].content_blocks)
 
 
-    
+# level - 3
+# Stream the events
+def agent_4():
+    SYSTEM_PROMPT = """ Consider you are a real quant researcher
+    - fetch_text_from_url -> this takes in url from where we want to pull in the extract text
+    """
 
+    agent = create_agent(
+        model="ollama:llama3.2",
+        tools=[fetch_text_from_url],
+        system_prompt=SYSTEM_PROMPT
+    )
 
+    stream = agent.stream_events({
+        "messages": [
+            {
+                "role": "user",
+                "content": "Can you get the latest trading details of the market https://www.nseindia.com/ "
+            }
+        ]
+    }, version="v3")
 
-
-
-
-
-
+    for snapshot in stream.values:
+        latest_message = snapshot["messages"][-1]
+        if latest_message.content:
+            if isinstance(latest_message, HumanMessage):
+                print(f"User: {latest_message.content}")
+            elif isinstance(latest_message, AIMessage):
+                print(f"Agent: {latest_message.content}")
+        elif latest_message.tool_calls:
+            print(f"Calling tools: {[tc['name'] for tc in latest_message.tool_calls]}")
 
 
