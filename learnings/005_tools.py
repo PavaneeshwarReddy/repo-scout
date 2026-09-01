@@ -18,6 +18,8 @@ Tool Return types:
 
 Dynamically Selection of tools:
 Sometimes tools can be very larger and this can overhelm for the model to decide
+
+wrap_tool_call is a powerful decorater that executed before every model request, where we can use to modify the request params choose tools, etc
 """
 
 from langchain.tools import tool
