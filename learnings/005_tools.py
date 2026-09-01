@@ -269,7 +269,7 @@ from langchain.tools.tool_node import ToolCallRequest
 # handle exceptions and convert them as tool messages
 def tool9():
 
-    @wrap_tool_call
+    @wrap_tool_call 
     def get_weather(request: ToolCallRequest, handler) -> ToolMessage:
         try:
             return handler(request)
