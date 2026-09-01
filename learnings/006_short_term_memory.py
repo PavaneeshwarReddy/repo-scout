@@ -85,10 +85,11 @@ def stm3():
             ]
         }
 
-
+    checkpointer = InMemorySaver()
     agent = create_agent(
        "ollama:llama3.2",
-        middleware=[delete_messages]
+        middleware=[delete_messages],
+        checkpointer=checkpointer
     )
 
 
